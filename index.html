@@ -58,19 +58,25 @@
             }
         }, 1000);
 
-        function openCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    video.srcObject = stream;
-                    video.style.display = "block"; // Show the camera feed
-                    setTimeout(() => {
-                        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // RICKROLL!! 😈
-                    }, 3000);
-                })
-                .catch(err => {
-                    alert("Camera access denied! 😈");
-                });
-        }
+function openCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+            video.style.display = "block"; // Show the camera feed
+            setTimeout(() => {
+                // Replace redirect with an embedded video
+                document.body.innerHTML = `
+                    <iframe width="100%" height="100%" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&rel=0&showinfo=0" 
+                        frameborder="0" allow="autoplay; fullscreen" allowfullscreen>
+                    </iframe>`;
+            }, 3000);
+        })
+        .catch(err => {
+            alert("Camera access denied! 😈");
+        });
+}
+
     </script>
 </body>
 </html>
