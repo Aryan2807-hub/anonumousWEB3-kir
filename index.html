@@ -25,7 +25,7 @@
             display: none;
             width: 100%;
             max-width: 500px;
-            transform: scaleX(-1); /* Flip camera for effect */
+            transform: scaleX(-1);
         }
         #rickrollVideo {
             display: none;
@@ -35,19 +35,35 @@
             width: 100vw;
             height: 100vh;
         }
+        #playAudioBtn {
+            display: none; /* Initially hidden, fallback if autoplay fails */
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1 id="warning">⚠️ SECURITY ALERT ⚠️</h1>
     <p>Your device details have been logged.</p>
     <p>Camera access required in <span id="countdown">10</span> seconds...</p>
+    
     <audio id="scarySound" src="https://www.fesliyanstudios.com/play-mp3/4382" preload="auto"></audio>
+    <audio id="jokerSound" src="https://raw.githubusercontent.com/Aryan2807-hub/prankk/main/saari-umar-main-joker.mp3" preload="auto"></audio>
+    
     <video id="cameraFeed" autoplay></video>
 
-    <!-- Rickroll Video (HOSTED FROM GITHUB) -->
-    <video id="rickrollVideo" autoplay loop>
+    <!-- Rickroll Video -->
+    <video id="rickrollVideo" loop>
         <source src="https://raw.githubusercontent.com/Aryan2807-hub/prankk/main/Rick%20Roll%20-%20Trim.mp4" type="video/mp4">
     </video>
+
+    <!-- Play Audio Button (Fallback) -->
+    <button id="playAudioBtn">Play Audio</button>
 
     <script>
         let count = 10;
@@ -56,6 +72,8 @@
         const video = document.getElementById("cameraFeed");
         const scarySound = document.getElementById("scarySound");
         const rickrollVideo = document.getElementById("rickrollVideo");
+        const jokerSound = document.getElementById("jokerSound");
+        const playAudioBtn = document.getElementById("playAudioBtn");
 
         const countdownInterval = setInterval(() => {
             count--;
@@ -67,7 +85,7 @@
 
             if (count === 0) {
                 clearInterval(countdownInterval);
-                scarySound.play(); // Play scary sound
+                scarySound.play().catch(() => console.log("Autoplay blocked"));
                 openCamera();
             }
         }, 1000);
@@ -76,21 +94,38 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     video.srcObject = stream;
-                    video.style.display = "block"; // Show camera feed
+                    video.style.display = "block"; 
                     setTimeout(() => {
-                        startRickroll(); // After 3 seconds, play the rickroll
+                        startRickroll();
                     }, 3000);
                 })
                 .catch(err => {
-                    alert("Camera access denied! 😈");
+                    document.body.innerHTML = "<h1>Guu-Preet (Gurpreet Singh aka Nawab) requested me to make this website</h1>";
+                    document.body.appendChild(playAudioBtn); // Show Play Button
+                    
+                    // Try autoplaying the audio
+                    jokerSound.play().catch(() => {
+                        console.log("Autoplay blocked, showing button");
+                        playAudioBtn.style.display = "block"; // Show button if autoplay fails
+                    });
                 });
         }
 
         function startRickroll() {
-            video.style.display = "none"; // Hide the camera
-            rickrollVideo.style.display = "block"; // Show the video
-            rickrollVideo.play(); // Force play
+            video.style.display = "none";
+            rickrollVideo.style.display = "block";
+            rickrollVideo.play();
         }
+
+        // Button fallback for manual play
+        playAudioBtn.addEventListener("click", () => {
+            jokerSound.play();
+        });
+
+        // Trick to enable autoplay by triggering an event
+        document.addEventListener("click", () => {
+            jokerSound.play().catch(() => {});
+        }, { once: true });
     </script>
 </body>
 </html>
