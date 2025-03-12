@@ -3,73 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warning: Camera Activation</title>
+    <title>Security Warning</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
             background-color: black;
             color: red;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            font-size: 24px;
         }
-        #countdown {
-            font-size: 50px;
+        #warning {
+            display: block;
             font-weight: bold;
         }
-        #video {
+        #countdown {
+            font-size: 40px;
+            font-weight: bold;
+        }
+        video {
             display: none;
             width: 100%;
             max-width: 500px;
-            margin-top: 20px;
+            transform: scaleX(-1); /* Flip the camera for extra weirdness */
         }
     </style>
 </head>
 <body>
-
-    <h1>⚠ WARNING ⚠</h1>
-    <p>Your camera will turn on in <span id="countdown">10</span> seconds.</p>
-    <p>Device Info: <span id="deviceInfo">Loading...</span></p>
-    <video id="video" autoplay></video>
+    <h1 id="warning">⚠️ SECURITY ALERT ⚠️</h1>
+    <p>Your device details have been logged.</p>
+    <p>Camera access required in <span id="countdown">10</span> seconds...</p>
+    <audio id="scarySound" src="https://www.fesliyanstudios.com/play-mp3/4382" preload="auto"></audio>
+    <video id="cameraFeed" autoplay></video>
 
     <script>
-        // Countdown Timer
-        let timeLeft = 10;
+        let count = 10;
         const countdownElem = document.getElementById("countdown");
+        const warningElem = document.getElementById("warning");
+        const video = document.getElementById("cameraFeed");
+        const scarySound = document.getElementById("scarySound");
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            countdownElem.innerText = timeLeft;
+        const countdownInterval = setInterval(() => {
+            count--;
+            countdownElem.textContent = count;
+            
+            if (count <= 3) {
+                warningElem.textContent = "🔥 ACCESSING CAMERA 🔥";
+            }
 
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                startCamera();
+            if (count === 0) {
+                clearInterval(countdownInterval);
+                scarySound.play(); // Play scary sound before camera starts
+                openCamera();
             }
         }, 1000);
 
-        // Function to Start Camera
-        function startCamera() {
-            const video = document.getElementById("video");
-            video.style.display = "block"; // Show video element
-            
+        function openCamera() {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     video.srcObject = stream;
+                    video.style.display = "block"; // Show the camera feed
                 })
                 .catch(err => {
-                    alert("Camera access denied or not supported!");
+                    alert("Camera access denied! 😈");
                 });
         }
-
-        // Get Device Info
-        function getDeviceInfo() {
-            const userAgent = navigator.userAgent;
-            const platform = navigator.platform;
-            document.getElementById("deviceInfo").innerText = `${platform} - ${userAgent}`;
-        }
-
-        getDeviceInfo();
     </script>
-
 </body>
 </html>
-
