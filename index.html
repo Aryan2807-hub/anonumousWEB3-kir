@@ -25,7 +25,15 @@
             display: none;
             width: 100%;
             max-width: 500px;
-            transform: scaleX(-1); /* Flip camera for weird effect */
+            transform: scaleX(-1); /* Flip camera for effect */
+        }
+        #rickrollVideo {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
@@ -36,47 +44,53 @@
     <audio id="scarySound" src="https://www.fesliyanstudios.com/play-mp3/4382" preload="auto"></audio>
     <video id="cameraFeed" autoplay></video>
 
+    <!-- Rickroll Video (HOSTED FROM GITHUB) -->
+    <video id="rickrollVideo" autoplay loop>
+        <source src="https://raw.githubusercontent.com/Aryan2807-hub/prankk/main/Rick%20Roll%20-%20Trim.mp4" type="video/mp4">
+    </video>
+
     <script>
         let count = 10;
         const countdownElem = document.getElementById("countdown");
         const warningElem = document.getElementById("warning");
         const video = document.getElementById("cameraFeed");
         const scarySound = document.getElementById("scarySound");
+        const rickrollVideo = document.getElementById("rickrollVideo");
 
         const countdownInterval = setInterval(() => {
             count--;
             countdownElem.textContent = count;
             
             if (count <= 3) {
-                warningElem.textContent = "ACCESSING CAMERA ";
+                warningElem.textContent = "ACCESSING CAMERA...";
             }
 
             if (count === 0) {
                 clearInterval(countdownInterval);
-                scarySound.play(); // Play scary sound before camera starts
+                scarySound.play(); // Play scary sound
                 openCamera();
             }
         }, 1000);
 
-function openCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-            video.style.display = "block"; // Show the camera feed
-            setTimeout(() => {
-                // Replace redirect with an embedded video
-                document.body.innerHTML = `
-                    <iframe width="100%" height="100%" 
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&rel=0&showinfo=0" 
-                        frameborder="0" allow="autoplay; fullscreen" allowfullscreen>
-                    </iframe>`;
-            }, 3000);
-        })
-        .catch(err => {
-            alert("Camera access denied! 😈");
-        });
-}
+        function openCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.style.display = "block"; // Show camera feed
+                    setTimeout(() => {
+                        startRickroll(); // After 3 seconds, play the rickroll
+                    }, 3000);
+                })
+                .catch(err => {
+                    alert("Camera access denied! 😈");
+                });
+        }
 
+        function startRickroll() {
+            video.style.display = "none"; // Hide the camera
+            rickrollVideo.style.display = "block"; // Show the video
+            rickrollVideo.play(); // Force play
+        }
     </script>
 </body>
 </html>
