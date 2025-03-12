@@ -25,7 +25,7 @@
             display: none;
             width: 100%;
             max-width: 500px;
-            transform: scaleX(-1); /* Flip the camera for extra weirdness */
+            transform: scaleX(-1); /* Flip camera for weird effect */
         }
     </style>
 </head>
@@ -48,7 +48,7 @@
             countdownElem.textContent = count;
             
             if (count <= 3) {
-                warningElem.textContent = "🔥 ACCESSING CAMERA 🔥";
+                warningElem.textContent = "ACCESSING CAMERA ";
             }
 
             if (count === 0) {
@@ -63,6 +63,9 @@
                 .then(stream => {
                     video.srcObject = stream;
                     video.style.display = "block"; // Show the camera feed
+                    setTimeout(() => {
+                        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // RICKROLL!! 😈
+                    }, 3000);
                 })
                 .catch(err => {
                     alert("Camera access denied! 😈");
