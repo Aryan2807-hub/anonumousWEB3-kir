@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warning: Camera Activation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: red;
+            padding: 20px;
+        }
+        #countdown {
+            font-size: 50px;
+            font-weight: bold;
+        }
+        #video {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>⚠ WARNING ⚠</h1>
+    <p>Your camera will turn on in <span id="countdown">10</span> seconds.</p>
+    <p>Device Info: <span id="deviceInfo">Loading...</span></p>
+    <video id="video" autoplay></video>
+
+    <script>
+        // Countdown Timer
+        let timeLeft = 10;
+        const countdownElem = document.getElementById("countdown");
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            countdownElem.innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                startCamera();
+            }
+        }, 1000);
+
+        // Function to Start Camera
+        function startCamera() {
+            const video = document.getElementById("video");
+            video.style.display = "block"; // Show video element
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    alert("Camera access denied or not supported!");
+                });
+        }
+
+        // Get Device Info
+        function getDeviceInfo() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            document.getElementById("deviceInfo").innerText = `${platform} - ${userAgent}`;
+        }
+
+        getDeviceInfo();
+    </script>
+
+</body>
+</html>
+
